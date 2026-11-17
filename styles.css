@@ -464,3 +464,17 @@ details p { margin:12px 0 0; color:var(--muted); line-height:1.65; font-size:12p
 #inlineMessage { margin-top: 22px; }
 #adminParticipants { max-height: 270px; overflow: auto; padding-right: 2px; }
 .game-panel button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+/* Обновление панели организатора */
+.participant-item { align-items:center; }
+.participant-actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-end; }
+.participant-actions .text-button { white-space:nowrap; }
+.export-button { margin-top:20px; margin-bottom:14px; }
+.site-dialog { border:1px solid var(--line); border-radius:22px; padding:28px; width:min(500px,calc(100vw - 28px)); background:var(--paper); color:var(--ink); box-shadow:var(--shadow); }
+.site-dialog::backdrop { background:rgba(8,29,24,.7); backdrop-filter:blur(3px); }
+.site-dialog h3 { margin:0; font-family:"Prata",Georgia,serif; font-weight:400; font-size:26px; }
+.dialog-actions { display:flex; gap:10px; justify-content:flex-end; }
+.check-line { display:flex; align-items:flex-start; gap:10px; cursor:pointer; }
+.check-line input { flex:none; width:18px; height:18px; margin:1px 0 0; accent-color:var(--green); }
+.check-line span { margin:0; font-weight:600; line-height:1.5; }
+@media(max-width:600px) { .participant-item { flex-direction:column; align-items:stretch; } .participant-actions { justify-content:flex-start; } .dialog-actions { flex-direction:column; } .site-dialog { padding:20px; } }

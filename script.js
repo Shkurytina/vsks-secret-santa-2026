@@ -2,7 +2,7 @@
 
 // Публичные параметры проекта. Не добавляйте сюда секретные ключи или пароли.
 const CONFIG = Object.freeze({
-  projectUrl: "https://lwdjiiucfeworweikgxq.supabase.co",
+  projectUrl: "https://lwdjiucfeworweikgxq.supabase.co",
   publishableKey: "sb_publishable_C67Iu68TtyyBBSCQ-rQj9g_yCxXzDdH",
   functionName: "santa-api",
 });
@@ -13,6 +13,8 @@ let adminPassword = ""; // Только в памяти текущей вкла�
 let activeTab = "join";
 let busy = false;
 let currentToken = "";
+let adminParticipants = [];
+let adminDrawn = false;
 
 function showMessage(message, isError = false) {
   const node = $("#inlineMessage");
@@ -176,26 +178,96 @@ $("#revealButton").addEventListener("click", reveal);
 
 async function refreshAdmin() {
   const data = await api("admin-list", { adminPassword });
-  $("#adminCount").textContent = data.participants.length;
-  $("#adminGameStatus").textContent = data.settings.draw_completed_at
-    ? "Жеребьёвка проведена. Получатели доступны по персональным ссылкам."
+  adminParticipants = data.participants;
+  adminDrawn = !!data.settings.draw_completed_at;
+  $("#adminCount").textContent = adminParticipants.length;
+  $("#adminGameStatus").textContent = adminDrawn
+    ? "Жеребьёвка завершена. Редактирование списка недоступно."
     : data.settings.registration_open ? "Регистрация открыта." : "Регистрация закрыта.";
-  $("#closeRegistration").disabled = !data.settings.registration_open || !!data.settings.draw_completed_at;
-  $("#drawButton").disabled = !!data.settings.draw_completed_at || data.participants.length < 3;
+  $("#closeRegistration").textContent = data.settings.registration_open ? "Закрыть регистрацию" : "Открыть регистрацию";
+  $("#closeRegistration").disabled = adminDrawn;
+  $("#drawButton").disabled = adminDrawn || adminParticipants.length < 3;
+  $("#exportCsv").disabled = !adminParticipants.length;
+  $("#drawConfirm").textContent = `В жеребьёвке будут участвовать ${adminParticipants.length} человек.`;
+
   const list = $("#adminParticipants");
   list.replaceChildren();
-  if (!data.participants.length) {
-    list.append(textElement("div", "notice", "Пока нет участников."));
-  }
-  for (const p of data.participants) {
+  if (!adminParticipants.length) list.append(textElement("div", "notice", "Пока нет участников."));
+
+  for (const p of adminParticipants) {
     const item = textElement("div", "participant-item", "");
     const content = document.createElement("div");
     content.append(textElement("strong", "", p.full_name));
     content.append(textElement("p", "", p.wishes || "Пожелания не указаны"));
     item.append(content);
+    if (!adminDrawn) {
+      const actions = textElement("div", "participant-actions", "");
+      const edit = textElement("button", "text-button", "Изменить");
+      edit.type = "button";
+      edit.addEventListener("click", () => openEditor(p));
+      const del = textElement("button", "text-button danger", "Удалить");
+      del.type = "button";
+      del.addEventListener("click", () => removeParticipant(p));
+      actions.append(edit, del);
+      item.append(actions);
+    }
     list.append(item);
   }
 }
+
+function openEditor(p) {
+  $("#editId").value = p.id;
+  $("#editName").value = p.full_name;
+  $("#editWish").value = p.wishes;
+  $("#editDialog").showModal();
+}
+$("#editForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  run(async () => {
+    const id = $("#editId").value;
+    const fullName = $("#editName").value.trim().replace(/\s+/g, " ");
+    const wishes = $("#editWish").value.trim();
+    if (fullName.length < 2) throw new Error("Укажи имя участника.");
+    await api("admin-update", { adminPassword, id, fullName, wishes });
+    $("#editDialog").close();
+    await refreshAdmin();
+    showMessage("Анкета изменена.");
+  });
+});
+$("#editCancel").addEventListener("click", () => $("#editDialog").close());
+
+function removeParticipant(p) {
+  if (!confirm(`Удалить участника «${p.full_name}»? Его персональная ссылка перестанет работать.`)) return;
+  run(async () => {
+    await api("admin-delete", { adminPassword, id: p.id });
+    await refreshAdmin();
+    await refreshStatus();
+    showMessage("Участник удалён.");
+  });
+}
+
+function csvCell(value) {
+  // Защита от формульной инъекции при открытии в Excel/Sheets.
+  const s = String(value ?? "").replace(/^\s*[=+@\-\t\r]/, (s) => "'" + s);
+  return '"' + s.replaceAll('"', '""') + '"';
+}
+$("#exportCsv").addEventListener("click", () => {
+  const rows = [
+    ["ФИО", "Пожелания", "Дата регистрации"],
+    ...adminParticipants.map((p) => [p.full_name, p.wishes, p.created_at]),
+  ];
+  const csv = "\uFEFF" + rows.map((row) => row.map(csvCell).join(";")).join("\r\n");
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "vsks-secret-santa-2026-participants.csv";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showMessage("Список участников сохранён в CSV.");
+});
+
 $("#adminForm").addEventListener("submit", (event) => {
   event.preventDefault();
   run(async () => {
@@ -211,18 +283,29 @@ $("#adminForm").addEventListener("submit", (event) => {
 });
 $("#refreshAdmin").addEventListener("click", () => run(async () => { await refreshAdmin(); showMessage("Список обновлён."); }));
 $("#closeRegistration").addEventListener("click", () => {
-  if (!confirm("Закрыть регистрацию? Новые участники больше не смогут подать анкету.")) return;
+  const opening = $("#closeRegistration").textContent.includes("Открыть");
+  const question = opening
+    ? "Снова открыть регистрацию для новых участников?"
+    : "Закрыть регистрацию? Новые участники не смогут зарегистрироваться.";
+  if (!confirm(question)) return;
   run(async () => {
-    await api("admin-close", { adminPassword });
+    await api(opening ? "admin-open" : "admin-close", { adminPassword });
     await refreshAdmin();
     await refreshStatus();
-    showMessage("Регистрация закрыта.");
+    showMessage(opening ? "Регистрация открыта." : "Регистрация закрыта.");
   });
 });
 $("#drawButton").addEventListener("click", () => {
-  if (!confirm("Провести жеребьёвку сейчас? После этого изменять список участников через сайт будет нельзя.")) return;
+  $("#drawApproval").checked = false;
+  $("#drawDialog").showModal();
+});
+$("#drawCancel").addEventListener("click", () => $("#drawDialog").close());
+$("#drawForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!$("#drawApproval").checked) return;
+  $("#drawDialog").close();
   run(async () => {
-    const result = await api("admin-draw", { adminPassword });
+    const result = await api("admin-draw", { adminPassword, confirm: "DRAW-2026" });
     await refreshAdmin();
     await refreshStatus();
     showMessage(`Жеребьёвка проведена! Распределено участников: ${result.count}.`);

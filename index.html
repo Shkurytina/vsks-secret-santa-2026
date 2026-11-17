@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
   <div class="snow" aria-hidden="true"></div>
@@ -153,6 +153,7 @@
               <div class="admin-toolbar"><div><span class="small-label">Участников</span><strong id="adminCount">0</strong></div><button class="text-button" type="button" id="refreshAdmin">Обновить</button></div>
               <div id="adminGameStatus" class="notice">Загрузка…</div>
               <div id="adminParticipants" class="participants-list"></div>
+              <button class="button button-ghost full export-button" type="button" id="exportCsv">Скачать список участников (CSV)</button>
               <div class="admin-actions">
                 <button class="button button-secondary full" type="button" id="closeRegistration">Закрыть регистрацию</button>
                 <button class="button button-primary full" type="button" id="drawButton">Провести жеребьёвку</button>
@@ -201,7 +202,32 @@
     <a href="#top">Наверх ↑</a>
   </footer>
 
+  <dialog id="editDialog" class="site-dialog" aria-labelledby="editHeading">
+    <form id="editForm" class="form">
+      <h3 id="editHeading">Редактирование участника</h3>
+      <input type="hidden" id="editId" />
+      <label><span>Имя и фамилия</span><input id="editName" maxlength="100" required /></label>
+      <label><span>Пожелания</span><textarea id="editWish" maxlength="1000" rows="4"></textarea></label>
+      <div class="dialog-actions">
+        <button type="button" class="button button-ghost" id="editCancel">Отмена</button>
+        <button type="submit" class="button button-primary">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="drawDialog" class="site-dialog" aria-labelledby="drawHeading">
+    <form id="drawForm" class="form">
+      <div class="ornament">✦</div>
+      <h3 id="drawHeading">Подтвердить жеребьёвку?</h3>
+      <p class="form-explainer" id="drawConfirm">Проверь состав участников.</p>
+      <p class="form-explainer">Это действие нельзя отменить через сайт. После него регистрации и изменения будут заблокированы.</p>
+      <label class="check-line"><input id="drawApproval" type="checkbox" required /><span>Все участники зарегистрировались, подтверждаю запуск.</span></label>
+      <div class="dialog-actions">
+        <button type="button" class="button button-ghost" id="drawCancel">Отмена</button>
+        <button type="submit" class="button button-primary">Провести жеребьёвку</button>
+      </div>
+    </form>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
