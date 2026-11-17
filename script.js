@@ -15,6 +15,7 @@ let busy = false;
 let currentToken = "";
 let adminParticipants = [];
 let adminDrawn = false;
+let registrationAllowed = false;
 
 function showMessage(message, isError = false) {
   const node = $("#inlineMessage");
@@ -29,6 +30,15 @@ function setBusy(value) {
     if (button.classList.contains("tab")) return;
     button.disabled = value;
   });
+
+  // После запроса восстанавливаем ограничения по состоянию игры,
+  // а не включаем все кнопки без исключения.
+  if (!value) {
+    $("#joinButton").disabled = !registrationAllowed;
+    $("#closeRegistration").disabled = adminDrawn;
+    $("#drawButton").disabled = adminDrawn || adminParticipants.length < 3;
+    $("#exportCsv").disabled = adminParticipants.length === 0;
+  }
 }
 async function api(action, params = {}) {
   const response = await fetch(`${CONFIG.projectUrl}/functions/v1/${CONFIG.functionName}`, {
@@ -69,6 +79,7 @@ $$(".tab").forEach((node) => node.addEventListener("click", () => switchTab(node
 async function refreshStatus() {
   try {
     const result = await api("status");
+    registrationAllowed = Boolean(result.registrationOpen && !result.drawn);
     $("#participantCount").textContent = result.count ?? 0;
     $("#gameStatus").textContent = result.drawn
       ? "Жеребьёвка проведена"
@@ -81,6 +92,8 @@ async function refreshStatus() {
       $("#joinFormArea").classList.add("hidden");
     }
   } catch (error) {
+    registrationAllowed = false;
+    $("#joinButton").disabled = true;
     $("#gameStatus").textContent = "Не удалось связаться с сервером";
     $("#registrationStatus").textContent = "Ошибка подключения";
     showMessage(`Не удалось получить статус: ${error.message}`, true);
@@ -296,6 +309,10 @@ $("#closeRegistration").addEventListener("click", () => {
   });
 });
 $("#drawButton").addEventListener("click", () => {
+  if (busy || adminDrawn || adminParticipants.length < 3) {
+    showMessage("Для жеребьёвки требуется минимум 3 участника.", true);
+    return;
+  }
   $("#drawApproval").checked = false;
   $("#drawDialog").showModal();
 });
@@ -303,6 +320,11 @@ $("#drawCancel").addEventListener("click", () => $("#drawDialog").close());
 $("#drawForm").addEventListener("submit", (event) => {
   event.preventDefault();
   if (!$("#drawApproval").checked) return;
+  if (adminDrawn || adminParticipants.length < 3) {
+    $("#drawDialog").close();
+    showMessage("Жеребьёвка недоступна: нужно минимум 3 участника.", true);
+    return;
+  }
   $("#drawDialog").close();
   run(async () => {
     const result = await api("admin-draw", { adminPassword, confirm: "DRAW-2026" });
