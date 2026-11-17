@@ -2,7 +2,7 @@
 
 // Публичные параметры проекта. Не добавляйте сюда секретные ключи или пароли.
 const CONFIG = Object.freeze({
-  projectUrl: "https://lwdjiucfeworweikgxq.supabase.co",
+  projectUrl: "https://lwdjiiucfeworweikgxq.supabase.co",
   publishableKey: "sb_publishable_C67Iu68TtyyBBSCQ-rQj9g_yCxXzDdH",
   functionName: "santa-api",
 });
