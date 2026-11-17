@@ -478,3 +478,29 @@ details p { margin:12px 0 0; color:var(--muted); line-height:1.65; font-size:12p
 .check-line input { flex:none; width:18px; height:18px; margin:1px 0 0; accent-color:var(--green); }
 .check-line span { margin:0; font-weight:600; line-height:1.5; }
 @media(max-width:600px) { .participant-item { flex-direction:column; align-items:stretch; } .participant-actions { justify-content:flex-start; } .dialog-actions { flex-direction:column; } .site-dialog { padding:20px; } }
+
+/* Правила игры 2026/2027 */
+.festive-rules { padding: 35px 0 100px; }
+.holiday-facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:28px; }
+.holiday-fact { background:var(--green); color:white; border-radius:22px; padding:24px 25px; display:flex; flex-direction:column; gap:7px; }
+.holiday-fact span { color:#c8d7cd; font-size:12px; font-weight:700; }
+.holiday-fact strong { color:#fff7e5; font-family:"Prata",Georgia,serif; font-size:clamp(21px,2.2vw,30px); font-weight:400; }
+.holiday-fact small { font-size:11px; color:#c8d7cd; }
+.festive-rules-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.festive-rule { border:1px solid var(--line); border-radius:23px; padding:27px; background:var(--paper); }
+.festive-rule h3 { margin:8px 0 12px; }
+.festive-rule p { font-size:13px; color:var(--muted); line-height:1.75; margin-bottom:0; }
+.festive-rule strong { color:var(--ink); }
+.rule-emoji { width:40px; height:40px; display:grid; place-items:center; border-radius:50%; background:#eee8d8; color:var(--green); font-size:21px; }
+.rule-link { display:inline-block; margin-top:15px; font-size:12px; font-weight:800; color:var(--red); }
+.ideas-panel { border:1px solid var(--line); border-radius:26px; background:#e9ece5; padding:34px; margin-top:28px; }
+.ideas-heading h3 { font-family:"Prata",Georgia,serif; font-size:clamp(26px,3vw,39px); font-weight:400; }
+.ideas-heading p { color:var(--muted); font-size:13px; line-height:1.7; }
+.ideas-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:23px; }
+.idea-card { background:var(--paper); border-radius:18px; padding:22px; min-width:0; }
+.idea-num { color:var(--red); font-size:11px; font-weight:800; letter-spacing:.1em; }
+.idea-card h4 { font-size:15px; color:var(--ink); margin:12px 0; }
+.idea-card p { font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:10px; }
+.idea-card .idea-example { color:#8a6848; font-style:italic; margin:0; }
+@media(max-width:900px) { .ideas-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .holiday-facts,.festive-rules-grid,.ideas-grid { grid-template-columns:1fr; } .festive-rules { padding:30px 0 70px; } .ideas-panel { padding:20px; } }
