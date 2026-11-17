@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#173b31" />
+  <meta name="description" content="Тайный Санта администрации СПБ РО ВСКС" />
+  <title>Тайный Санта · СПБ РО ВСКС</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="snow" aria-hidden="true"></div>
+
+  <header class="header">
+    <a class="brand" href="#top" aria-label="На главную">
+      <span class="brand-mark">ВСКС</span>
+      <span class="brand-text">Тайный Санта</span>
+    </a>
+    <nav class="nav">
+      <a href="#rules">Правила</a>
+      <a href="#game">Игра</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <a class="button button-small button-ghost" href="#game">Присоединиться</a>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-copy">
+        <div class="eyebrow">СПБ РО ВСКС · НОВЫЙ ГОД 2026</div>
+        <h1>Немного тайны.<br><span>Немного волшебства.</span></h1>
+        <p class="hero-text">
+          Закрытая новогодняя игра для членов администрации СПБ РО ВСКС.
+          Добавь своё имя и пожелания, а в день жеребьёвки узнай, для кого ты станешь Тайным Сантой.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#game">Участвовать</a>
+          <a class="button button-link" href="#rules">Как это работает <span>→</span></a>
+        </div>
+
+        <div class="countdown-card">
+          <div>
+            <span class="countdown-label">До Нового года</span>
+            <strong id="countdown">—</strong>
+          </div>
+          <span class="mini-tree" aria-hidden="true">✦</span>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-label="Новогодняя иллюстрация">
+        <div class="moon"></div>
+        <div class="gift gift-a"><span></span></div>
+        <div class="gift gift-b"><span></span></div>
+        <div class="pine pine-1"></div>
+        <div class="pine pine-2"></div>
+        <div class="pine pine-3"></div>
+        <div class="hill hill-a"></div>
+        <div class="hill hill-b"></div>
+        <div class="star star-1">✦</div>
+        <div class="star star-2">✧</div>
+        <div class="star star-3">✦</div>
+        <div class="art-caption">
+          <span>Подарок — это не вещь.</span>
+          <strong>Это знак внимания.</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section rules" id="rules">
+      <div class="section-heading">
+        <span class="eyebrow">ВСЁ ПРОСТО</span>
+        <h2>Три шага до подарка</h2>
+        <p>Никаких аккаунтов и почты — только общий пароль и персональная ссылка.</p>
+      </div>
+
+      <div class="steps">
+        <article class="step-card">
+          <span class="step-number">01</span>
+          <div class="step-icon">✎</div>
+          <h3>Добавь себя</h3>
+          <p>Введи общий пароль, укажи имя и оставь подсказку Санте о желаемом подарке.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">02</span>
+          <div class="step-icon">⌁</div>
+          <h3>Ждём всех</h3>
+          <p>Сохрани персональную ссылку и дождись, пока организатор соберёт всех участников.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">03</span>
+          <div class="step-icon">✦</div>
+          <h3>Храни секрет</h3>
+          <p>Открой личную ссылку, узнай своего получателя и сохрани секрет до обмена подарками.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section game-section" id="game">
+      <div class="game-shell">
+        <div class="game-intro">
+          <span class="eyebrow eyebrow-light">НАША ИГРА · 2026/2027</span>
+          <h2>Тайный Санта<br>СПБ РО ВСКС</h2>
+          <p>Присоединяйся к игре, расскажи о своих пожеланиях и сохрани персональную ссылку. После жеребьёвки именно она откроет имя получателя подарка.</p>
+          <div class="game-badge"><span class="badge-dot"></span><span id="gameStatus">Подключаемся к игре…</span></div>
+        </div>
+        <div class="game-panel">
+          <div class="tabs" role="tablist" aria-label="Разделы игры">
+            <button type="button" class="tab active" data-tab="join" aria-selected="true">Участие</button>
+            <button type="button" class="tab" data-tab="reveal" aria-selected="false">Мой результат</button>
+            <button type="button" class="tab" data-tab="admin" aria-selected="false">Организатор</button>
+          </div>
+          <div class="tab-content active" id="join">
+            <div id="joinFormArea">
+              <h3>Присоединиться к игре</h3>
+              <p class="form-explainer">Доступ только для членов администрации. Введи общий пароль, затем заполни небольшую анкету.</p>
+              <form id="participantForm" class="form">
+                <label><span>Общий пароль игры</span><input type="password" id="gamePassword" autocomplete="off" required placeholder="Пароль администрации" /></label>
+                <label><span>Имя и фамилия</span><input id="name" maxlength="100" autocomplete="name" placeholder="Как к тебе обращаться?" required /></label>
+                <label><span>Пожелания к подарку <em>необязательно</em></span><textarea id="wish" maxlength="1000" rows="4" placeholder="Что тебе нравится? Какие подарки точно не нужны?"></textarea></label>
+                <button type="submit" id="joinButton" class="button button-primary full">Зарегистрироваться</button>
+              </form>
+            </div>
+            <div id="registrationSuccess" class="hidden">
+              <div class="ornament">✦</div>
+              <h3>Ты в игре!</h3>
+              <p class="form-explainer">Это твоя уникальная ссылка. Сохрани её: она понадобится после жеребьёвки. Не отправляй ссылку другим участникам.</p>
+              <label><span>Личная ссылка</span><input readonly id="personalUrl" /></label>
+              <button class="button button-primary full" type="button" id="copyPersonalUrl">Скопировать ссылку</button>
+              <button class="text-button" type="button" id="goToResult">Перейти к моему результату</button>
+            </div>
+            <div class="participant-summary"><div><span>Уже участвуют</span><strong id="participantCount">—</strong></div><span class="tiny-note" id="registrationStatus">Загрузка…</span></div>
+          </div>
+          <div class="tab-content" id="reveal">
+            <div class="reveal-box">
+              <div class="ornament">✦</div>
+              <h3>Кому ты даришь подарок?</h3>
+              <p>Открой свою персональную ссылку или вставь полученный при регистрации код.</p>
+              <label><span>Персональный код (из ссылки)</span><input id="personalToken" autocomplete="off" spellcheck="false" placeholder="64 символа или полная ссылка" /></label>
+              <button class="button button-primary full" id="revealButton" type="button">Узнать результат</button>
+              <div id="revealResult" class="reveal-result hidden" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="tab-content" id="admin">
+            <div id="adminGate">
+              <h3>Панель организатора</h3>
+              <p class="form-explainer">Используй отдельный пароль организатора, который задан в Supabase Secrets.</p>
+              <form id="adminForm" class="form"><label><span>Пароль организатора</span><input id="adminPassword" type="password" autocomplete="off" required placeholder="Пароль администратора" /></label><button class="button button-secondary full" type="submit" id="adminLogin">Войти</button></form>
+            </div>
+            <div id="adminPanel" class="hidden">
+              <div class="admin-toolbar"><div><span class="small-label">Участников</span><strong id="adminCount">0</strong></div><button class="text-button" type="button" id="refreshAdmin">Обновить</button></div>
+              <div id="adminGameStatus" class="notice">Загрузка…</div>
+              <div id="adminParticipants" class="participants-list"></div>
+              <div class="admin-actions">
+                <button class="button button-secondary full" type="button" id="closeRegistration">Закрыть регистрацию</button>
+                <button class="button button-primary full" type="button" id="drawButton">Провести жеребьёвку</button>
+              </div>
+              <p class="small-info">Жеребьёвка запускается один раз. Она необратима через эту панель. Перед запуском убедись, что все зарегистрировались.</p>
+              <button class="text-button" type="button" id="adminLogout">Выйти из панели</button>
+            </div>
+          </div>
+          <div id="inlineMessage" class="notice hidden" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="section-heading compact">
+        <span class="eyebrow">ВОПРОСЫ</span>
+        <h2>Перед началом</h2>
+      </div>
+      <div class="faq-grid">
+        <details open>
+          <summary>Как проходит жеребьёвка?</summary>
+          <p>Сайт случайно перемешивает участников так, чтобы никто не получил самого себя. Участник получает свою персональную ссылку ещё при регистрации.</p>
+        </details>
+        <details>
+          <summary>Можно ли посмотреть чужой результат?</summary>
+          <p>Только если получить чужую персональную ссылку. Не передавай свою ссылку другим.</p>
+        </details>
+        <details>
+          <summary>Где хранятся данные?</summary>
+          <p>Анкеты и результаты хранятся в Supabase. Персональная ссылка сохраняется только у самого участника, если он её скопировал.</p>
+        </details>
+        <details>
+          <summary>Можно ли изменить оформление и правила?</summary>
+          <p>Да. Цвета, тексты и даты находятся в файлах сайта, а регистрация и жеребьёвка управляются через Supabase.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="brand footer-brand">
+      <span class="brand-mark">ВСКС</span>
+      <span class="brand-text">Тайный Санта</span>
+    </div>
+    <p>Сделано для администрации СПБ РО ВСКС · 2026</p>
+    <a href="#top">Наверх ↑</a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
