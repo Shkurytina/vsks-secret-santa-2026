@@ -1,4 +1,6 @@
 "use strict";
+// VSKS Santa v2.1 — защита жеребьёвки при 0–2 участниках.
+console.info("VSKS Santa v2.1: защита жеребьёвки активна");
 
 // Публичные параметры проекта. Не добавляйте сюда секретные ключи или пароли.
 const CONFIG = Object.freeze({
@@ -16,6 +18,9 @@ let currentToken = "";
 let adminParticipants = [];
 let adminDrawn = false;
 let registrationAllowed = false;
+// Функции администрирования недоступны до первой успешной загрузки списка.
+$("#drawButton").disabled = true;
+$("#exportCsv").disabled = true;
 
 function showMessage(message, isError = false) {
   const node = $("#inlineMessage");
